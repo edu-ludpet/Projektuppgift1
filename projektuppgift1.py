@@ -142,3 +142,33 @@ if nivå == 2:
         gissning_svår = input("Ange gissning som följd av fyra siffror->")
 
     print("nachotallrik", gissning_svår)
+
+#tabellen
+tabell = []
+
+def skriv_tabell():
+    print("\nDrag #    Drag        Feedback")
+    print("------------------------------------------------")
+    for rad in tabell:
+        print(f"{rad['drag']:>5}    {rad['gissning']}        {rad['feedback']}
+    print()
+
+def beräkna_feedback(gissning, kod):
+    rätt_plats = 0
+    fel_plats = 0
+
+    kod_lista = list(kod)
+    giss_lista = list(gissning)
+
+    for i in range(4):
+        if giss_lista[i] == kod_lista[i]:
+            rätt_plats += 1
+            kod_lista[i] = "*"
+            giss_lista[i] = "-"
+
+    for i in range(4):
+        if giss_lista[i] in kod_lista:
+            fel_plats += 1
+            kod_lista[kod_lista.index(giss_lista[i])] = "*"
+
+    return "✔" * rätt_plats + "[]" * fel_plats
