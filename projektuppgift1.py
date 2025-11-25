@@ -60,7 +60,7 @@ print(f"Vinnare: {spel_vinnare}")
 
 
 #Uppgift:2 ordgissningspel
-ord_lst = ["is", "sol", "bok", "fågel", "blomma", "skola", "resväska", "fotbollslag", "bibliotekarie", "kärleksförklaring"] #lista av ord som kan vara med
+ord_lst = ["is", "sol", "bok", "fågel", "blomma", "skola", "resväska", "fotbollslag", "bibliotekarie", "kärleksförklaring"] #lista av ord
 import random as nacho
 while True:
     random_word = nacho.choice(ord_lst)
@@ -70,36 +70,40 @@ while True:
     bokstäver_felgissade = []
     gömda_ordet = "*" * len(random_word)
     print(f"Du ska gissa ett ord, bokstav för bokstav, på {antal_bokstäver} bokstäver")
-    for runda in range(1, 11):
+    while True:
         while True:
             gissning = input("Ange en gissning -> ") #random bokstav från spelare
-            if len(gissning) == 1 and gissning.isalpha(): #prevents user from typing more then 1 letters and only letters
-                count_of_letter = random_word.count(gissning) #this shows how many of the quessed letters exist in the random_word
-                print(count_of_letter)
-                print(random_word_list)
+            if len(gissning) == 1 and gissning.isalpha(): #and gissning != bokstäver_felgissade, #prevents user from typing more then 1 letters and only letters
+                gömda_ordet_list = list(gömda_ordet)
+                #print(random_word_list) #this is the random_word seperated
                 if gissning in random_word:
                     print("Rätt gissning!")
-
-
-
-
-                if random_word.count(f'"{gissning}"') <= 1: # this needs to filter if the letter is in the word
-                    bokstäver_felgissade.append(gissning) #if bokstaven isnt in the word, add to list
+                    for i in range(len(random_word)):
+                        if random_word[i] == gissning:
+                            gömda_ordet_list[i] = gissning
+                    gömda_ordet = "".join(gömda_ordet_list)
+                elif gissning in bokstäver_felgissade:
+                    pass
+                else:
+                    bokstäver_felgissade.append(gissning)
                     antal_gissningar -= 1
-                print(f"Du har nu {antal_gissningar} st. felgissningar kvar.")
-                print(f"felgisningar: {bokstäver_felgissade}")
-                print(gömda_ordet)
-                print(random_word)
+                print(f"Du har nu {antal_gissningar} st. felgissningar kvar")
+                print(f"Felgissningar: {"".join(bokstäver_felgissade)}")
+                print("".join(gömda_ordet_list))
                 break
             else:
                 pass
-    if runda > 0:
-        if random_word == gömda_ordet:
-            print("Du överlevde!")
-        else:
-            print(f"Du förlorade :-(\nDet korrekta ordet var: {random_word}")
+        if gömda_ordet == random_word:
+            break
+        elif antal_gissningar <= 0:
+            break
 
+    if random_word == gömda_ordet:
+        print("Du överlevde!")
+    else:
+        print(f"Du förlorade :-(\nDet korrekta ordet var: {random_word}")
         while True:
+            answer = "x"
             answer = input("Vill du spela en till omgång (j/n) -> ").lower()
             if answer.lower() == "n":
                 print("programet stängs")
@@ -111,6 +115,7 @@ while True:
         if answer.lower() == "n":
             break
 print("utanför loop")
+
 
 
 
@@ -126,49 +131,17 @@ print("\nDu får välja mellan två svårighetsnivåer:")
 print("Lättare nivå: Alla siffror är garanterat olika")
 print("Svårare nivå: Det kan finnas upprepningar av en eller flera siffror")
 nivå = int(input("\nAnge önskad nivå: lättare (1), svårare (2) ->"))
-#lättare nivå
+
 if nivå == 1:
     gissning_lätt = ""
-    while len(gissning_lätt) != 4 or not gissning_lätt.isdigit():
+    while len(gissning_lätt) != 4 or not gissning_lätt.isdigit(): #lättare nivå
         gissning_lätt = input("Ange gissning som följd av fyra siffror->")
 
     print("nacho", gissning_lätt)
 
-
-#svårare nivå
 if nivå == 2:
     gissning_svår = ""
-    while len(gissning_svår) != 4 or not gissning_svår.isdigit():
+    while len(gissning_svår) != 4 or not gissning_svår.isdigit(): #svårare nivå
         gissning_svår = input("Ange gissning som följd av fyra siffror->")
 
     print("nachotallrik", gissning_svår)
-
-#tabellen
-tabell = []
-
-def skriv_tabell():
-    print("\nDrag #    Drag        Feedback")
-    print("------------------------------------------------")
-    for rad in tabell:
-        print(f"{rad['drag']:>5}    {rad['gissning']}        {rad['feedback']}
-    print()
-
-def beräkna_feedback(gissning, kod):
-    rätt_plats = 0
-    fel_plats = 0
-
-    kod_lista = list(kod)
-    giss_lista = list(gissning)
-
-    for i in range(4):
-        if giss_lista[i] == kod_lista[i]:
-            rätt_plats += 1
-            kod_lista[i] = "*"
-            giss_lista[i] = "-"
-
-    for i in range(4):
-        if giss_lista[i] in kod_lista:
-            fel_plats += 1
-            kod_lista[kod_lista.index(giss_lista[i])] = "*"
-
-    return "✔" * rätt_plats + "[]" * fel_plats
