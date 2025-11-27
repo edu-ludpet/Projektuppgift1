@@ -129,19 +129,52 @@ print("För de siffror som inte finns med i koden ges ingen markering.")
 print("\nExempel: om den slumpade koden är 2315\noch du gissar 3165\nså blir responsen ✔[][]")
 print("\nDu får välja mellan två svårighetsnivåer:")
 print("Lättare nivå: Alla siffror är garanterat olika")
-print("Svårare nivå: Det kan finnas upprepningar av en eller flera siffror")
-nivå = int(input("\nAnge önskad nivå: lättare (1), svårare (2) ->"))
+print("Svårare nivå: Det kan finnas upprepningar av en eller flera siffror\n")
 
-if nivå == 1:
-    gissning_lätt = ""
-    while len(gissning_lätt) != 4 or not gissning_lätt.isdigit(): #lättare nivå
-        gissning_lätt = input("Ange gissning som följd av fyra siffror->")
+while True:
+    while True:
+        nivå = input("Ange önskad nivå: lättare (1), svårare (2) ->")
+        nacho_list = []
+        if nivå in ("1", "2"):
+            break
+        else:
+            pass
+    print(nivå)
+    # place for both programs
 
-    print("nacho", gissning_lätt)
+    for runda in range(1, 12 + 1):
+        if nivå == "1":
+            while True:
+                gissning = input("Ange gissning som följd av fyra siffror->")
+                if len(gissning) != 4 or not gissning.isdigit() or gissning in nacho_list:
+                    pass
+                else:
+                    break
+        elif nivå == "2":
+            while True:
+                gissning = input("Ange gissning som följd av fyra siffror->")
+                if len(gissning) != 4 or not gissning.isdigit() or gissning in nacho_list:
+                    pass
+                else:
+                    break
+        nacho_list.append(gissning)
+        print(nacho_list)
+        print(gissning)
+        print(f"{'Drag #':>12}{'Drag':>10}{'Feedback':>18}\n{'-' * 50}")
+        for nacho in range(1, 12 + 1):
+            print(f"{nacho}\n")
 
-if nivå == 2:
-    gissning_svår = ""
-    while len(gissning_svår) != 4 or not gissning_svår.isdigit(): #svårare nivå
-        gissning_svår = input("Ange gissning som följd av fyra siffror->")
+    while True:
+        answer = "x"
+        answer = input("Vill du spela en till omgång (j/n) -> ").lower()
+        if answer.lower() == "n":
+            print("programet stängs")
+            break
+        elif answer.lower() == "j":
+            break
+        else:
+            pass
+    if answer.lower() == "n":
+        break
 
-    print("nachotallrik", gissning_svår)
+
