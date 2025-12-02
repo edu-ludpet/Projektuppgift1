@@ -132,37 +132,53 @@ print("Lättare nivå: Alla siffror är garanterat olika")
 print("Svårare nivå: Det kan finnas upprepningar av en eller flera siffror\n")
 
 while True:
+    random_digits = 0000
+    gissning = "x"
+    import random as rand
     while True:
         nivå = input("Ange önskad nivå: lättare (1), svårare (2) ->")
-        nacho_list = []
+        felgissnings_list = ["","","","","","","","","","","","",]
         if nivå in ("1", "2"):
             break
         else:
             pass
+    if nivå == "1": #temporary
+        random_digits = rand.sample(["1", "2", "3", "4", "5", "6"], 4)
+        code = "".join(random_digits)
+        print(code)
+
+    else: #nivå == "2": #temporary
+        random_digits = "".join(str(rand.randint(1, 6)) for _ in range(4))
+        code = random_digits
+        print(code)
     print(nivå)
     # place for both programs
-
     for runda in range(1, 12 + 1):
-        if nivå == "1":
-            while True:
-                gissning = input("Ange gissning som följd av fyra siffror->")
-                if len(gissning) != 4 or not gissning.isdigit() or gissning in nacho_list:
-                    pass
-                else:
-                    break
-        elif nivå == "2":
-            while True:
-                gissning = input("Ange gissning som följd av fyra siffror->")
-                if len(gissning) != 4 or not gissning.isdigit() or gissning in nacho_list:
-                    pass
-                else:
-                    break
-        nacho_list.append(gissning)
-        print(nacho_list)
-        print(gissning)
-        print(f"{'Drag #':>12}{'Drag':>10}{'Feedback':>18}\n{'-' * 50}")
+        while True:
+            gissning = input("Ange gissning som följd av fyra siffror->") # add a cap on number 789
+            if len(gissning) != 4 or not gissning.isdigit() or gissning in felgissnings_list:
+                pass
+            else:
+                break
+
+        felgissnings_list[runda -1] = gissning
+        print(f"{'Drag #':>12}{'Drag':>10}{'Feedback':>18}\n{'-' * 50}") # could be function since its just visual
         for nacho in range(1, 12 + 1):
-            print(f"{nacho}\n")
+            feedback = "?"
+            backwards_list = (f"{(13 - nacho):>9}")
+            print(backwards_list,end=" ")
+            print(f"{felgissnings_list[nacho - 1]:>13}", end=" ")
+            print(f"{feedback:>9}")
+
+
+        print(felgissnings_list)
+        #rätt_gissat = sum(gissning[i] == code[i] for i in range (4))
+
+        if gissning == code:
+            print("correct")
+        print(gissning)
+        print(code)
+
 
     while True:
         answer = "x"
@@ -176,5 +192,7 @@ while True:
             pass
     if answer.lower() == "n":
         break
+
+
 
 
