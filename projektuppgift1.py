@@ -3,11 +3,14 @@ vinnare = "UNKNOWN"
 program_namn = "Python312"
 print("Nu ska vi spela sten, sax eller påse!")
 print(f"Jag är {program_namn}")
+#spelaren anger sitt namn
 spelar_namn = input("Ange ditt namn -> ")
+#poängvariabler
 spelar_poäng = 0
 program_poäng = 0
 
-import random as nacho
+#systemet som genererar ett alternativ åt datorn
+import random as rand
 while True:
     try:
         omgångar = int(input("ange antal omgångar som vi ska spela ->"))
@@ -16,7 +19,7 @@ while True:
         pass
 for runda in range(1, omgångar + 1):
     print(f"Spelomgång {runda}\n---------------")
-    program_drag = nacho.choice(["sten", "sax", "påse"])
+    program_drag = rand.choice(["sten", "sax", "påse"])
 
     while True:
         val = input("Välj 'Sten', 'Sax' eller 'Påse'-> ")
@@ -24,7 +27,7 @@ for runda in range(1, omgångar + 1):
             break
         else:
             pass
-
+#system för att avgöra poängen för varje drag och göra så att datorn vet när den vinner, förlorar eller oavgjort
     if program_drag == "sten" and val == "sten":
         vinnare = "Oavgjort"
     elif program_drag == "sax" and val == "sax":
@@ -53,23 +56,27 @@ for runda in range(1, omgångar + 1):
         spel_vinnare = program_namn
     else:
         spel_vinnare = spelar_namn
-
+#slutsats där spelarnamn visas tillsammans med poäng
     print(f"{spelar_namn} spelar: {val}\n{program_namn} spelar: {program_drag}\n\nVinnare i spelomgång {runda}: {vinnare}!")
 print(f"\nSLUTRESULTAT\n{14 * "="}\n{program_namn}: {program_poäng}P\n{spelar_namn}: {spelar_poäng}P\n")
 print(f"Vinnare: {spel_vinnare}")
 
 
-#Uppgift:2 ordgissningspel
+
+#Uppgift:2 ord gissningsspel
+#lista på alla möjliga ord för datorn att välja
 ord_lst = ["is", "sol", "bok", "fågel", "blomma", "skola", "resväska", "fotbollslag", "bibliotekarie", "kärleksförklaring"] #lista av ord
-import random as nacho
+#system som gör datorns ordval
+import random as rand
 while True:
-    random_word = nacho.choice(ord_lst)
+    random_word = rand.choice(ord_lst)
     random_word_list = list(random_word)
     antal_gissningar = 10
     antal_bokstäver = len(random_word)
     bokstäver_felgissade = []
     gömda_ordet = "*" * len(random_word)
     print(f"Du ska gissa ett ord, bokstav för bokstav, på {antal_bokstäver} bokstäver")
+    #system där spelaren får skriva in sin gissning och datorn ger sin respons
     while True:
         while True:
             gissning = input("Ange en gissning -> ") #random bokstav från spelare
@@ -118,7 +125,6 @@ print("utanför loop")
 
 
 
-
 #uppgift 3: Mastermind
 print("Datorn kommer slumpa fram en kod på fyra siffror mellan 1 och 6.")
 print("Du ska försöka gissa denna kods siffror på max 12 drag.")
@@ -138,21 +144,41 @@ while True:
     while True:
         nivå = input("Ange önskad nivå: lättare (1), svårare (2) ->")
         felgissnings_list = ["","","","","","","","","","","","",]
+        ledtråds_list = ["","","","","","","","","","","","",]
         if nivå in ("1", "2"):
             break
         else:
             pass
-    if nivå == "1": #temporary
+
+    if nivå == "1":
         random_digits = rand.sample(["1", "2", "3", "4", "5", "6"], 4)
         code = "".join(random_digits)
-        print(code)
-
-    else: #nivå == "2": #temporary
+    else: #nivå == "2":
         random_digits = "".join(str(rand.randint(1, 6)) for _ in range(4))
         code = random_digits
-        print(code)
-    print(nivå)
-    # place for both programs
+
+    def ge_feedback(gissning, code):
+            korrekt_plats = 0 #antalet korrekt placerade bokstäver
+            fel_plats = 0 #antalet rätt bokstav, felplats
+
+            for rätt in range(4):
+                if gissning[rätt] == code[rätt]:
+                    korrekt_plats += 1
+
+            code_list = list(code)
+            gissning_list = list(gissning)
+
+            for marking in range(4): #scanar igenom gissning listan med code listan
+                if gissning_list[marking] == code_list[marking]:
+                    code_list[marking] = "*"
+                    gissning_list[marking] = "#" # används för att markera ✔
+
+            for tal in gissning_list: # scanar gissning listan och code listan för samma tal
+                if tal in code_list:
+                    fel_plats += 1
+                    code_list[code_list.index(tal)] = "*" # används för att markera redan bestämda []
+            return "✔" * korrekt_plats + "[]" * fel_plats # multiplicerar antalet rätt gissningar och felplacerade med respektive tecken/symbol
+
     for runda in range(1, 12 + 1):
         while True:
             gissning = input("Ange gissning som följd av fyra siffror->") # add a cap on number 789
@@ -162,36 +188,33 @@ while True:
                 break
 
         felgissnings_list[runda -1] = gissning
+        ledtråds_list[runda -1] = ge_feedback(gissning, code)
         print(f"{'Drag #':>12}{'Drag':>10}{'Feedback':>18}\n{'-' * 50}") # could be function since its just visual
-        for nacho in range(1, 12 + 1):
-            feedback = "?"
-            backwards_list = (f"{(13 - nacho):>9}")
+
+        for l in range(1, 12 + 1):#printar ut kolumnerna
+            backwards_list = (f"{(13 - l):>9}")
             print(backwards_list,end=" ")
-            print(f"{felgissnings_list[nacho - 1]:>13}", end=" ")
-            print(f"{feedback:>9}")
+            print(f"{felgissnings_list[::-1][l - 1]:>12}", end=" ")
+            print(f"{ledtråds_list[::-1][l - 1]:>13}")
 
+        if gissning == code: #Om gissning är coden bryt loopen, printa
+            print("Snyggt :-)")
+            break
 
-        print(felgissnings_list)
-        #rätt_gissat = sum(gissning[i] == code[i] for i in range (4))
+    if gissning != code: #om gissning inte är code, printa
+        print("Nästa gång går det bättre! Rätt rad var:", code)
 
-        if gissning == code:
-            print("correct")
-        print(gissning)
-        print(code)
-
-
-    while True:
+    while True: #fortsätter loopa om man inte skriver j/J eller n/N
         answer = "x"
         answer = input("Vill du spela en till omgång (j/n) -> ").lower()
-        if answer.lower() == "n":
-            print("programet stängs")
-            break
-        elif answer.lower() == "j":
+        if answer.lower() == "n" or answer.lower() == "j":
             break
         else:
             pass
-    if answer.lower() == "n":
+    if answer.lower() == "n": #används för att bryta root loopen
+        print("programet stängs")
         break
+
 
 
 
